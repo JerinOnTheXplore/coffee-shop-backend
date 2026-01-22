@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum RoastLevel {
+  LIGHT
+  MEDIUM
+  DARK
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  role        Role     @default(CUSTOMER)
+  isVerified  Boolean  @default(false)
+
+  coffees     Coffee[]   @relation("AdminCoffees")
+  orders      Order[]
+  reviews     Review[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Coffee {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  roastLevel  RoastLevel
+  isAvailable Boolean    @default(true)
+  viewCount   Int        @default(0)
+
+  adminId     String
+  admin       User       @relation("AdminCoffees", fields: [adminId], references: [id])
+
+  orderItems  OrderItem[]
+  reviews     Review[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([name])
+  @@index([roastLevel])
+}
+
+model Order {
+  id          String       @id @default(uuid())
+  userId      String
+  status      OrderStatus  @default(PENDING)
+  totalAmount Float
+
+  user        User         @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+
+  createdAt   DateTime @default(now())
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  orderId  String
+  coffeeId String
+  quantity Int
+  price    Float
+
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  coffee Coffee @relation(fields: [coffeeId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String
+
+  userId    String
+  coffeeId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coffee Coffee @relation(fields: [coffeeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, coffeeId])
+}
