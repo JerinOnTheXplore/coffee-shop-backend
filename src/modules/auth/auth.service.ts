@@ -6,7 +6,7 @@ import { prisma } from '../../lib/prisma';
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const REFRESH_SECRET = process.env.REFRESH_SECRET as string;
 
-  const AuthService={
+export const AuthService={
     register: async(name:string, email:string, password: string, role:Role = Role.CUSTOMER)=>{
         const existingUser=await prisma.user.findUnique({where:{email}});
         if(existingUser) throw new Error('email already registered!!..');
