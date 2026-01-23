@@ -1,14 +1,12 @@
 import express, { Application } from "express"
-import { coffeeRouter } from "./modules/coffee/coffee.router";
+import { coffeeRoutes } from "./modules/coffee/coffee.router";
 
 const app:Application = express();
 
 app.use(express.json());
 
-app.use("/coffees",coffeeRouter);
+app.use("/coffees",coffeeRoutes);
 
-app.get("/",(req,res)=>{
-    res.send("Hell00 World");
-})
+app.get("/",)
 
 export default app;

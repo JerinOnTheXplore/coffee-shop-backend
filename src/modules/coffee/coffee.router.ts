@@ -1,11 +1,14 @@
 import express, { Request, Response, Router } from "express";
+import { coffeeControllers } from "./coffee.controller";
 
 const router = express.Router();
 
-//create coffee (only admin..)
+//create coffee 
 
-router.post("/",(req,res)=>{
-    res.send("Create a new coffee")
-})
+router.post("/", coffeeControllers.createCoffee); 
+router.get("/", coffeeControllers.getAllCoffees);
 
-export const coffeeRouter:Router = router;
+
+  
+
+export const coffeeRoutes:Router = router;
