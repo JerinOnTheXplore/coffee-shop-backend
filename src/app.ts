@@ -1,11 +1,11 @@
 import express, { Application } from "express"
-import { coffeeRoutes } from "./modules/coffee/coffee.router";
+import { authMiddleware } from "./middlewares/auth.middleware";
 
 const app:Application = express();
 
 app.use(express.json());
 
-app.use("/coffees",coffeeRoutes);
+
 
 app.get("/",)
 
