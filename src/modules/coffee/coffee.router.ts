@@ -13,6 +13,22 @@ router.post(
   CoffeeController.createCoffee
 );
 
+// admin update korbe coffee..
+router.patch(
+    "/:id",
+    authMiddleware,
+    roleMiddleware("ADMIN"),
+    CoffeeController.updateCoffee
+);
+
+// admin coffee delete korbe....
+router.delete(
+    "/:id",
+    authMiddleware,// ei khane role age diye disilam..eta korle token verify korar agei req.user.role check kore...tai Cannot read properties of undefined (reading 'role') eita ashchilo..
+    roleMiddleware("ADMIN"),
+    CoffeeController.deleteCoffee
+);
+
 // public all coffees get korte pare...
 router.get("/", CoffeeController.getAllCoffees);
 

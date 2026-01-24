@@ -15,8 +15,6 @@ app.get('/admin', authMiddleware, roleMiddleware('ADMIN'), (req,res) => {
   res.send('Welcome Admin');
 });
 
-app.get("/",);
-
 app.use("/api/coffees", CoffeeRoutes);
 
 export default app;

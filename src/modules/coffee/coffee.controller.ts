@@ -19,6 +19,48 @@ const createCoffee = async (req: any, res: Response) => {
   }
 };
 
+const updateCoffee =async (req:any, res:Response)=>{
+    try{
+        const {id} = req.params;
+        const adminId = req.user.id;
+
+        const result =await CoffeeService.updateCoffee(
+            id,
+            adminId,
+            req.body
+        );
+        res.status(200).json({
+            success: true,
+            message: "coffee updated successfully..",
+            data: result,
+        });
+    } catch (error:any){
+        res.status(403).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+const deleteCoffee=async (req:any, res:Response)=>{
+    try {
+        const {id} = req.params;
+        const adminId= req.user.id;
+
+        await CoffeeService.deleteCoffee(id, adminId);
+
+        res.status(200).json({
+            success: true,
+            message: "coffee deleted successfully..",
+        });
+    } catch (error:any){
+        res.status(403).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
 const getAllCoffees = async (req: Request, res: Response) => {
   const result = await CoffeeService.getAllCoffees();
   res.status(200).json({
@@ -41,4 +83,6 @@ export const CoffeeController = {
   createCoffee,
   getAllCoffees,
   getSingleCoffee,
+  updateCoffee,
+  deleteCoffee,
 };
