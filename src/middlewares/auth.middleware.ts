@@ -1,7 +1,6 @@
 
 import { NextFunction, Response } from 'express';
-import jwt from 'jsonwebtoken'
-import app from '../app';
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -20,8 +19,12 @@ export const authMiddleware = (
 
     
     try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; //userId,role..//
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    req.user = {
+      id: decoded.userId,
+      role: decoded.role,
+    }; //userId,role..//
+    console.log("Decoded user:", decoded);
     next();
   } catch {
     return res.status(401).json({ message: 'Invalid token' });
