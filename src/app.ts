@@ -3,6 +3,7 @@ import authRouter from './modules/auth/auth.router';
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { roleMiddleware } from "./middlewares/role.middleware";
 import { CoffeeRoutes } from "./modules/coffee/coffee.router";
+import { ReviewRoutes } from "./modules/review/review.router";
 
 const app:Application = express();
 
