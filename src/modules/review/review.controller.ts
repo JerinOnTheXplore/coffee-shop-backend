@@ -5,7 +5,7 @@ import { ReviewService } from "./review.service";
 const createReview= async (req:any, res:Response)=>{
     try{
         const {coffeeId,rating,comment}=req.body;
-        const userId = req.userId;
+        const userId = req.user.id;
 
         const result = await ReviewService.createReview(userId,coffeeId,rating,comment);
 

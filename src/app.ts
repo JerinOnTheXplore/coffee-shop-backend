@@ -18,4 +18,6 @@ app.get('/admin', authMiddleware, roleMiddleware('ADMIN'), (req,res) => {
 
 app.use("/api/coffees", CoffeeRoutes);
 
+app.use("/api", ReviewRoutes);
+
 export default app;
