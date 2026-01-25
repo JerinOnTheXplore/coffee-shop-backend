@@ -17,4 +17,12 @@ router.post(
 // GET /coffees/:id/reviews (public)
 router.get("/coffees/:id/reviews",ReviewController.getCoffeeReviews);
 
+// DELETE /api/reviews/<reviewId> eta admin korbe..
+router.delete(
+    "/review/:id",
+    authMiddleware,//auth age ..role pore..eta jiboneo vulbona..
+    roleMiddleware("ADMIN"),
+    ReviewController.deleteReview
+)
+
 export const ReviewRoutes = router;
