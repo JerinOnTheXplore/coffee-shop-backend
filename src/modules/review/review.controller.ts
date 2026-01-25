@@ -33,7 +33,25 @@ const getCoffeeReviews= async(req: Request, res:Response)=>{
   });
 };
 
+const deleteReview =async(req: Request,res: Response)=>{
+    try{
+        const {id}=req.params;
+        await ReviewService.deleteReview(id as string);
+
+        res.status(200).json({
+            success: true,
+            message:"Review deleted successfully..",
+        });
+    } catch(error:any){
+        res.status(400).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
 export const ReviewController={
     createReview,
     getCoffeeReviews,
+    deleteReview,
 }
