@@ -47,7 +47,23 @@ const getCoffeeReviews = async (coffeeId: string)=>{
     return {avgRating, reviews};
 };
 
+const deleteReview = async(reviewID:string)=>{
+    //review exist kore kina check kore..
+    const review = await prisma.review.findUnique({
+        where:{id: reviewID},
+    });
+
+    if(!review){
+        throw new Error("review not found");
+    }
+
+    return prisma.review.delete({
+        where: {id: reviewID}
+    });
+};
+
 export const ReviewService={
     createReview,
-    getCoffeeReviews
+    getCoffeeReviews,
+    deleteReview,
 }
