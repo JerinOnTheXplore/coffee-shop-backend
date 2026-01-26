@@ -29,7 +29,7 @@ const createOrder = async (req:any,res:Response)=>{
 };
 
 const getMyOrders= async(req:any,res:Response)=>{
-    const userId= req.user.userId;
+    const userId= req.user.id;
     const result = await OrderService.getMyOrders(userId);
 
     res.status(200).json({

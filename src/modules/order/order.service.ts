@@ -6,6 +6,12 @@ type OrderItemPayload = {
     quantity: number;
 };
 
+interface OrderQueryOptions {
+    page?: number;
+    limit?: number;
+    status?: OrderStatus;
+}
+
 const createOrder = async (
     userId:string,
     items: OrderItemPayload[]
@@ -54,9 +60,14 @@ const createOrder = async (
     });
 };
 
-const getMyOrders = async(userId:string)=>{
-    return prisma.order.findMany({
-        where:{userId},
+const getMyOrders = async(userId:string,options:OrderQueryOptions)=>{
+    const page = options.page || 1;
+    const limit= options.limit || 10;
+    const skip = (page - 1)*limit;
+    const whereClause = options.status?{userId,status:options.status}:{userId};
+
+    const orders= await prisma.order.findMany({
+        where:whereClause,
         include:{
             items:{
                 include:{
@@ -65,18 +76,34 @@ const getMyOrders = async(userId:string)=>{
             },
         },
         orderBy:{createdAt:"desc"},
+        skip,
+        take:limit,
     });
+    const total =await prisma.order.count({where: whereClause});
+
+    return {orders,total,page,limit};
 };
 
-const getAllOrders = async () => {
-  return prisma.order.findMany({
+const getAllOrders = async (options: OrderQueryOptions) => {
+  const page = options.page || 1;
+  const limit = options.limit || 10;
+  const skip = (page - 1) * limit;
+
+  const whereClause = options.status ? { status: options.status } : {};  
+  const orders= await prisma.order.findMany({
+    where: whereClause,
     include: {
       user: { select: { id: true, name: true } },
       items: true,
     },
     orderBy: { createdAt: "desc" },
+    skip,
+    take:limit,
   });
+  const total = await prisma.order.count({where: whereClause});
+  return {orders,total,page,limit};
 };
+    
 
 const updateOrderStatus = async(
     orderId: string,
