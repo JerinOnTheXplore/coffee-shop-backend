@@ -1,3 +1,4 @@
+import { OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
 type OrderItemPayload = {
@@ -77,8 +78,28 @@ const getAllOrders = async () => {
   });
 };
 
+const updateOrderStatus = async(
+    orderId: string,
+    status: OrderStatus
+)=>{
+    //order exist korche kina..
+    const order= await prisma.order.findUnique({
+        where: {id: orderId},
+    });
+
+    if(!order){
+        throw new Error("Order not found");
+    };
+    //status update kore..
+    return prisma.order.update({
+        where: {id:orderId},
+        data:{status},
+    });
+};
+
 export const OrderService = {
   createOrder,
   getMyOrders,
   getAllOrders,
+  updateOrderStatus,
 };
