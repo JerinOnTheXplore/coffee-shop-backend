@@ -7,9 +7,9 @@ type OrderItemPayload = {
 };
 
 interface OrderQueryOptions {
-    page?: number;
-    limit?: number;
-    status?: OrderStatus;
+    page?: number | undefined;
+    limit?: number | undefined;
+    status?: OrderStatus | undefined;
 }
 
 const createOrder = async (
@@ -23,7 +23,7 @@ const createOrder = async (
     let totalAmount=0;
 
     //price calcucalate..
-    const orderItemsData:any =[];
+    const orderItemsData:any[] =[];
 
     for (const item of items){
         const coffee= await prisma.coffee.findUnique({

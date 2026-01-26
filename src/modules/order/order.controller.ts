@@ -29,22 +29,36 @@ const createOrder = async (req:any,res:Response)=>{
 };
 
 const getMyOrders= async(req:any,res:Response)=>{
-    const userId= req.user.id;
-    const result = await OrderService.getMyOrders(userId);
-
-    res.status(200).json({
-    success: true,
-    data: result,
-  });
+    try{
+        const userId= req.user.id;
+    const { page, limit, status } = req.query;
+    const result = await OrderService.getMyOrders(userId,{
+        page:page,
+        limit: limit ,
+        status:status as OrderStatus
+    });
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+    res.status(400).json({ success: false, message: error.message });
+    }    
 };
 
 const getAllOrders= async(req:Request,res:Response)=>{
-    const result= await OrderService.getAllOrders();
+    try {
+    const page = req.query.page ? Number(req.query.page) : undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+    const status = req.query.status as OrderStatus | undefined;
 
-    res.status(200).json({
-        success:true,
-        data:result,
+    const result = await OrderService.getAllOrders({
+      page,
+      limit,
+      status,
     });
+
+    res.json({ success: true, ...result });
+  } catch (error: any) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 const updateOrderStatus =async(req:Request, res:Response)=>{
