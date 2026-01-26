@@ -29,4 +29,12 @@ router.get(
     orderController.getAllOrders
 );
 
+// admin order status update korbe..
+router.patch(
+    "/orders/:id/status",
+    authMiddleware,
+    roleMiddleware("ADMIN"),
+    orderController.updateOrderStatus
+);
+
 export const OrderRoutes = router;
